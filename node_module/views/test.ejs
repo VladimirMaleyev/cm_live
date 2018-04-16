@@ -1,0 +1,22 @@
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="/public/css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="/public/css/styles.css">
+	<script type ="text/javascript" src="/public/js/jquery-2.1.4.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
+	<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+	<script type ="text/javascript" src="/public/js/Chart.js"></script>	
+	<script type="text/javascript" src="/public/js/timer.js"></script>
+</head>
+<body>
+	<h1>EKKE <%=varib%></h1><script>
+  	//$(function () {
+    var socket = io();
+	socket.on('pressEmit', function(battld){
+      alert("Text"+battld);
+    });
+  	//});
+	</script>
+		
+</body>
+</html>

@@ -1,0 +1,218 @@
+<html>
+<head>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" type="text/css" href="/public/css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="/public/css/styles.css">
+	<script type ="text/javascript" src="/public/js/jquery-2.1.4.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
+	<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.js"></script>
+	<script type="text/javascript" src="/public/js/timer.js"></script>
+	<script src="/public/js/bluechart.js"></script>
+	<script src="/public/js/redchart.js"></script>
+	<script type ="text/javascript">
+		var rounds=<%=rounds%>;
+		var round_number=<%=round_numb%>;
+		var rounds_time=<%=rounds_time%>;
+		var st_time=<%-s_time%>;
+		var round_1=[{red_score: <%=round_1[0].red_score%>, blue_score: <%=round_1[0].blue_score%>},{red_score: <%=round_1[1].red_score%>, blue_score: <%=round_1[1].blue_score%>},{red_score: <%=round_1[2].red_score%>, blue_score: <%=round_1[2].blue_score%>}];
+		var round_2=[{red_score: <%=round_2[0].red_score%>, blue_score: <%=round_2[0].blue_score%>},{red_score: <%=round_2[1].red_score%>, blue_score: <%=round_2[1].blue_score%>},{red_score: <%=round_2[2].red_score%>, blue_score: <%=round_2[2].blue_score%>}];
+		var round_3=[{red_score: <%=round_3[0].red_score%>, blue_score: <%=round_3[0].blue_score%>},{red_score: <%=round_3[1].red_score%>, blue_score: <%=round_3[1].blue_score%>},{red_score: <%=round_3[2].red_score%>, blue_score: <%=round_3[2].blue_score%>}];
+	</script>
+</head>
+<body>
+	<script>
+		begin();
+	</script>
+	<script>
+
+    var socket = io();
+
+	socket.on('connection', function(){
+
+		var bt_id = getUrlVars()["id"];
+    	socket.emit('send_btl_id', bt_id);
+	});
+	socket.on('pressEmit', function(round_1, round_2, round_3, red_res_round_1, red_res_round_2, red_res_round_3, blue_res_round_1, blue_res_round_2, blue_res_round_3, red_res_total, blue_res_total){
+		
+							if (round_1[0].red_score!="0" && round_1[1].red_score!="0" && round_1[2].red_score!="0"){
+							var red_chart_1=document.createElement('canvas');
+							red_chart_1.id='red_chart_1';	
+							document.body.appendChild(red_chart_1);
+							document.getElementById('red_chart').appendChild(red_chart_1);
+							red_chart_1.style.width="500px";
+							red_chart_1.style.height="100px";	
+							redchart(round_1[0].red_score,round_1[1].red_score,round_1[2].red_score,"red_chart_1");
+							}
+							if (round_2[0].red_score!="0" && round_2[1].red_score!="0" && round_2[2].red_score!="0"){
+							var red_chart_2=document.createElement('canvas');
+							red_chart_2.id='red_chart_2';	
+							document.body.appendChild(red_chart_2);
+							document.getElementById('red_chart').appendChild(red_chart_2);
+							red_chart_2.style.width="500px";
+							red_chart_2.style.height="100px";
+							redchart(round_2[0].red_score,round_2[1].red_score,round_2[2].red_score,"red_chart_2");
+							}
+							if (round_3[0].red_score!="0" && round_3[1].red_score!="0" && round_3[2].red_score!="0"){
+							var red_chart_3=document.createElement('canvas');
+							red_chart_3.id='red_chart_3';	
+							document.body.appendChild(red_chart_3);
+							document.getElementById('red_chart').appendChild(red_chart_3);
+							red_chart_3.style.width="500px";
+							red_chart_3.style.height="100px";
+							redchart(round_3[0].red_score,round_3[1].red_score,round_3[2].red_score,"red_chart_3");
+							}
+		
+							if (round_1[0].blue_score!="0" && round_1[1].blue_score!="0" && round_1[2].blue_score!="0"){
+							var blue_chart_1=document.createElement('canvas');
+							blue_chart_1.id='blueChart_1';	
+							document.body.appendChild(blue_chart_1);
+							document.getElementById('blue_chart').appendChild(blue_chart_1);
+							blue_chart_1.style.width="500px";
+							blue_chart_1.style.height="100px";	
+							bluechart(round_1[0].blue_score,round_1[1].blue_score,round_1[2].blue_score,"blueChart_1");
+							}
+							if (round_2[0].blue_score!="0" && round_2[1].blue_score!="0" && round_2[2].blue_score!="0"){
+							var blue_chart_2=document.createElement('canvas');
+							blue_chart_2.id='blueChart_2';	
+							document.body.appendChild(blue_chart_2);
+							document.getElementById('blue_chart').appendChild(blue_chart_2);
+							blue_chart_2.style.width="500px";
+							blue_chart_2.style.height="100px";
+							bluechart(round_2[0].blue_score,round_2[1].blue_score,round_2[2].blue_score,"blueChart_2");
+							}
+							if (round_3[0].blue_score!="0" && round_3[1].blue_score!="0" && round_3[2].blue_score!="0"){
+							var blue_chart_3=document.createElement('canvas');
+							blue_chart_3.id='blueChart_3';	
+							document.body.appendChild(blue_chart_3);
+							document.getElementById('blue_chart').appendChild(blue_chart_3);
+							blue_chart_3.style.width="500px";
+							blue_chart_3.style.height="100px";
+							bluechart(round_3[0].blue_score,round_3[1].blue_score,round_3[2].blue_score,"blueChart_3");
+							}
+		
+		//alert(document.getElementById('table2').rows[2].cells[0].innerHTML);
+		
+		/*document.getElementById('table1').rows[2].cells[6].innerHTML=red_res_round_1;
+		document.getElementById('table1').rows[3].cells[6].innerHTML=red_res_round_2;
+		document.getElementById('table1').rows[4].cells[6].innerHTML=red_res_round_3;*/
+		document.getElementByID('sc-red').innerHTML=red_res_total;
+	
+		/*document.getElementById('table2').rows[2].cells[0].innerHTML=blue_res_round_1;
+		document.getElementById('table2').rows[3].cells[0].innerHTML=blue_res_round_2;
+		document.getElementById('table2').rows[4].cells[0].innerHTML=blue_res_round_3;*/
+		document.getElementById('sc-blue').innerHTML=blue_res_total;
+		
+		//alert(socket.io.engine.id);
+	});
+	socket.on('timeNull', function(time){
+		st_time=time;
+		console.log(st_time);
+	});
+
+	</script>
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+		<a href="#" class="navbar-brand">Back</a>
+	</nav>
+	<div class="row">
+		<div class="col-md-5 col-lg-5 text-left" style="height:700px;"> 
+			<div style="background-color: #FB8585; color:#EA0101; height: 150px;">
+				<h1 style="font-size:52px; padding-left:30px; ">RED</h1>
+					<img src="/public/img/red.png" align="right" height="200px"/>
+					</div>
+					<div class="text-left" style=" color:#EA0101; padding-top:15px; padding-bottom:10px; font-size:36px;">
+					<h2 style="font-size:42px; padding-top:20px; "><%=red_name%> <%=red_surname%></h2>
+					<h2 style="float:left;">Club / Nationality: <%=red_club%></h2>
+					</div>
+					<div id="red_chart" style="float:left; padding-top:30px; padding-left: 120px;">
+						<script>
+							if (round_1[0].red_score!="0" && round_1[1].red_score!="0" && round_1[2].red_score!="0"){
+							var red_chart_1=document.createElement('canvas');
+							red_chart_1.id='red_chart_1';	
+							document.body.appendChild(red_chart_1);
+							document.getElementById('red_chart').appendChild(red_chart_1);
+							red_chart_1.style.width="500px";
+							red_chart_1.style.height="100px";	
+							redchart(round_1[0].red_score,round_1[1].red_score,round_1[2].red_score,"red_chart_1");
+							}
+							if (round_2[0].red_score!="0" && round_2[1].red_score!="0" && round_2[2].red_score!="0"){
+							var red_chart_2=document.createElement('canvas');
+							red_chart_2.id='red_chart_2';	
+							document.body.appendChild(red_chart_2);
+							document.getElementById('red_chart').appendChild(red_chart_2);
+							red_chart_2.style.width="500px";
+							red_chart_2.style.height="100px";
+							redchart(round_2[0].red_score,round_2[1].red_score,round_2[2].red_score,"red_chart_2");
+							}
+							if (round_3[0].red_score!="0" && round_3[1].red_score!="0" && round_3[2].red_score!="0"){
+							var red_chart_3=document.createElement('canvas');
+							red_chart_3.id='red_chart_3';	
+							document.body.appendChild(red_chart_3);
+							document.getElementById('red_chart').appendChild(red_chart_3);
+							red_chart_3.style.width="500px";
+							red_chart_3.style.height="100px";
+							redchart(round_3[0].red_score,round_3[1].red_score,round_3[2].red_score,"red_chart_3");
+							}
+							</script>
+						</div>
+		</div>
+		<div class="col-md-2 col-lg-2 text-center" style="height:700px">
+			<h5>Weight Category: <%=weight%> KG</h5>
+			<h5>Fight Nr.: <%=battlenr%>/ Ring Nr.: <%=ring_nr%></h5>
+			<h1 id="rd_nr" style="color:white; font-size:72px; position:absolute; padding-left:39%; padding-top:15%;"><%=round_numb%></h1>
+			<script>if (round_number===0){document.getElementById('rd_nr').innerHTML=rounds;}</script>
+			<img src="/public/img/round.jpeg" height="180px"/>
+			<h3 style="padding-top:20px;">TIMER:</h3>
+			<canvas id="my_canvas" width="300" height="300" style=" text-align:center; color:black;"></canvas>
+			<div class="text-center" style="padding-top:70px;">
+				<h2 id="sc-red">RED: <%=red_res_total%></h2>
+				<h2 id="sc-blue">BLUE: <%=blue_res_total%></h2>
+			</div>
+		</div>
+		<div class="col-md-5 col-lg-5 text-right" style="height:700px">
+			<div style="background-color: #979BF1; color:#020EEB; height:150px;">
+				<h1 style="font-size:52px; padding-right:30px; ">BLUE</h1>
+					<img src="/public/img/blue.png" align="left" height="200px"/>
+					</div>
+					<div class="text-right" style="color:#020EEB; padding-top:15px; padding-bottom:10px; font-size:36px;">
+					<h2 style="font-size:42px; padding-top:20px;"><%=blue_name%> <%=blue_surname%></h2>
+					<h2 style="float:right;">Club / Nationality: <%=blue_club%></h2>
+					</div>
+						<div id="blue_chart" style="float:right; padding-top:30px; padding-right: 120px;">
+							
+							<script>
+							if (round_1[0].blue_score!="0" && round_1[1].blue_score!="0" && round_1[2].blue_score!="0"){
+							var blue_chart_1=document.createElement('canvas');
+							blue_chart_1.id='blueChart_1';	
+							document.body.appendChild(blue_chart_1);
+							document.getElementById('blue_chart').appendChild(blue_chart_1);
+							blue_chart_1.style.width="500px";
+							blue_chart_1.style.height="100px";	
+							bluechart(round_1[0].blue_score,round_1[1].blue_score,round_1[2].blue_score,"blueChart_1");
+							}
+							if (round_2[0].blue_score!="0" && round_2[1].blue_score!="0" && round_2[2].blue_score!="0"){
+							var blue_chart_2=document.createElement('canvas');
+							blue_chart_2.id='blueChart_2';	
+							document.body.appendChild(blue_chart_2);
+							document.getElementById('blue_chart').appendChild(blue_chart_2);
+							blue_chart_2.style.width="500px";
+							blue_chart_2.style.height="100px";
+							bluechart(round_2[0].blue_score,round_2[1].blue_score,round_2[2].blue_score,"blueChart_2");
+							}
+							if (round_3[0].blue_score!="0" && round_3[1].blue_score!="0" && round_3[2].blue_score!="0"){
+							var blue_chart_3=document.createElement('canvas');
+							blue_chart_3.id='blueChart_3';	
+							document.body.appendChild(blue_chart_3);
+							document.getElementById('blue_chart').appendChild(blue_chart_3);
+							blue_chart_3.style.width="500px";
+							blue_chart_3.style.height="100px";
+							bluechart(round_3[0].blue_score,round_3[1].blue_score,round_3[2].blue_score,"blueChart_3");
+							}
+							</script>
+							
+						</div>
+						
+		</div>
+	</div>
+</body>
+</html>

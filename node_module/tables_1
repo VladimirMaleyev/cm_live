@@ -1,0 +1,29 @@
+use cmsedna_test;
+CREATE TABLE battle_scores (
+    id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	battle_id INTEGER(10),
+	judge_id INTEGER(10) UNSIGNED, 
+	red_result SMALLINT(10), 
+	blue_result SMALLINT(10), 
+	round_nr INTEGER(2)
+);
+CREATE TABLE remotes (
+	id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	judge_id INTEGER,
+	ring_id INTEGER
+);
+
+CREATE TABLE scores_logs (
+	id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	judge_id INTEGER(10) UNSIGNED,
+	battle_id INTEGER(10),
+	remote_id INTEGER,
+	colours_id TINYINT,
+	time TIME, //h/m/s
+	valid BOOLEAN,
+	active BOOLEAN
+);
+CREATE TABLE colours (
+	id TINYINT NOT NULL PRIMARY KEY,
+	fighter_colour VARCHAR(4)
+);

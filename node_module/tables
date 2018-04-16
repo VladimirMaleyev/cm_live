@@ -1,0 +1,159 @@
+create table scores_logs( id integer(10) unsigned not null primary key auto_increment, judge_id integer(10) unsigned, battle_id integer(10) unsigned, remote_id integer(10) unsigned, colours_id integer(10) unsigned, time TIME, valid BOOLEAN, foreign key (judge_id) references competitions(judge_id), foreign key (battle_id) references battles(id), foreign key (remote_id) references remote_controls(id), foreign key (colours_id) references colours(id) );
+create table remote_controls( id integer(10) unsigned not null primary key auto_increment, judge_id integer(10) unsigned, ring_id integer(10) unsigned, active BOOLEAN, foreign key (judge_id) references competitions(judge_id),foreign key (ring_id) references battles(ring_id));          
+create table colours( id integer(10) unsigned not null primary key, fighter_colour varchar(4));
+показать судей
+select users.id, users.name, users.surname from competitions join users on competitions.judge_id = users.id;
+
+
+select concat(judge_id, ':', battle_id) as pair, (select count(*)  from scores_logs as t2 where valid = 1 and colours_id = 1 AND pair = concat(judge_id, ':', battle_id)) as red_score, (select count(*)  from scores_logs as t2 where valid = 1 and colours_id = 2 AND pair = concat(judge_id, ':', battle_id)) as blue_score from scores_logs as t1  where valid = 1  GROUP BY pair;
+
+select battle_id, round as round_nr, judge_id, concat(judge_id, ':', battle_id) as pair, (select count(*)  from scores_logs as t2 where valid = 1 and colours_id = 1 AND pair = concat(judge_id, ':', battle_id) AND round_nr = round) as red_score, (select count(*)  from scores_logs as t2 where valid = 1 and colours_id = 2 AND pair = concat(judge_id, ':', battle_id) AND round_nr = round) as blue_score from scores_logs as t1  where valid = 1  GROUP BY judge_id, battle_id, round ORDER BY pair desc;
+
+view
+create view battle_scores as select battle_id, round as round_nr, judge_id, concat(judge_id, ':', battle_id) as pair, (select count(*)  from scores_logs as t2 where valid = 1 and colours_id = 1 AND pair = concat(judge_id, ':', battle_id) AND round_nr = round) as red_score, (select count(*) from scores_logs as t2 where valid = 1 and colours_id = 2 AND pair = concat(judge_id, ':', battle_id) AND round_nr = round) as blue_score from scores_logs as t1  where valid = 1 GROUP BY round, battle_id, judge_id ORDER BY pair desc;
+
+battle statuses
+
+ create table battles_statuses( id INTEGER(10) unsigned NOT NULL PRIMARY KEY AUTO_INCREMENT, battle_id INTEGER(10) unsigned NOT NULL, battle_status BOOLEAN, round_nr smallint(2), round_status BOOLEAN, ring_id INTEGER(10) unsigned, foreign key (battle_id) references battles(id), foreign key (ring_id) references rings(id));
+ without foreign key
+ create table battles_statuses( id INTEGER(10) unsigned NOT NULL PRIMARY KEY AUTO_INCREMENT, battle_id INTEGER(10) unsigned NOT NULL, battle_status BOOLEAN, round_nr smallint(2), round_status BOOLEAN, ring_id INTEGER(10) unsigned;
+
+
+Нужно чтобы сервер отправлял количество раундов у боя - есть
+
+
+
+Таймер боя нужно привязать к батлу чтобы знать какой идет бой или бои в данный момент
+____________
+ID | JUDGE_ID | RING_ID | ACTIVE
+__________
+
+		
+	
+	if (battles_statuses.status==true where battle_id = 4432) 
+	BEGIN
+	insert into scores_logs (...,valid) values (...,true);
+	END
+	else 
+	BEGIN
+	insert into scores_logs (...,valid) values (...,false);
+	END
+
+
+______________________________________________________________
+	
+____________________________________________________________________________________________
+	ID	|   BATTLE_ID  | battle_status     |     ROUND_nr   | ROUND_STATUS     |  ring_id   |
+	1	|   	4432   |       Begin/END   |		 1	    |	true/false	   |	  22	|
+	
+после запуска таймера если раунд равен 1 то  отправляется статус_боя true, статус_раунда, раунд, айди боя на /start_timer в дальнейшем статус боя false отправляется в конце 3 раунда
+сервер получает параметры и вписывает их в базу 
+в дальнейшем при нажатие кнопки на пульте сервер получает айди пульта, время и цвет. пульт связан с судьей и с рингом
+проверяем какой бои сейчас идет на ринге отправившего нажатие пульта (status-true) и получаем айди боя используя ring_id пульта/
+Выбираем battle_id где ring_id=remote_controles.id и battle_status=true 
+(select battle_id from battles_statuses left join remote_controles on ring_id=remote_controles.id where battles_statuses.battle_status=begin;)
+получаем какой бой начался
+проверяем идет ли сейчас раунд и взависимости true или false вписываем значение valid в лог нажатия кнопки на пульт
+
+	if (battles_statuses.status==true where battle_id = 4432) 
+	BEGIN
+	insert into scores_logs (...,valid) values (...,true);
+	END
+	else 
+	BEGIN
+	insert into scores_logs (...,valid) values (...,false);
+	END
+
+
+чтобы вывести очки мне нужно знать сколько раундов боя и сколько судей которые нажали на кнопку уже есть в логах. если с раундами боя все понятно то номера судьи в бою у меня нету есть только айди 
+
+
+
+//select battles.id, red_user_info.name, red_user_info.surname from battles left join competition_users on battles.red_user_id=competition_users.user_id left join users as red_user_info on competition_users.user_id=red_user_info.id and select blue_user_info.name, blue_user_info.surname from battles left join competition_users on battles.blue_user_id=competition_users.user_id left join users as blue_user_info on competition_users.user_id=blue_user_info.id where battles.id=4432 group by battles.id;
+
+
+
+//клиент судьи подписываеться на поток и при изменениях в базе сервер шлёт очки 
+//много потоков
+
+нужно привязать судей к батлу чтобы узнать зарание до вписывания судейский состав у батла
+
+время боя не ясно 1.30 и 1.50
+
+
+start time
+приходит пакет старт тайм=> проверяем статус боя, статус раунда [
+		если бой не идет и раунд не идет=> начинаем бой начинаем раунд и записываем время начала боя
+	или
+		если бой идет но раунд неидет=> начинаем раунд и записываем время начала боя
+		
+	если бой идет и раунд идет=> ничего незаписываем
+		
+
+
+]
+
+firebase real time fire data base
+
+
+update_time записанные данные доэтого времени менять нельзя 
+
+привязка судьи на ринге к активному бою ринга
+
+
+лучше отправлять время начала раунда и на клиентском приложение высчитывать время таймера
+
+что должно распологаться?
+
+что должно отправляться?
+
+как происходит назначение победителя?
+
+все данные с таблиц должны быть в базе абсолютно все
+
+
+
+в начале боя 
+статусы: статус боя 0 раунд 1 статус раунда 0 ринг 16 время 0
+
+нажимаем кнопку СБ 1 СР 1 Р 1 Время 1:1:0
+
+конец таймера 1 раунда
+				 СБ 1 СР 0 Р 2 Время 0
+				 проверяем время < вр раунда
+				 	если бой завершен то раунд равен 0
+					
+					если нет 
+				 	старт продолжаем завершать бой
+				 
+				 проверяем время > вр раунда
+				 	переходим на следующий раунд
+					если раунд < кол раундов
+					отправляем статус боя 1 статус раунда 0 номер раунда
+					если раунд > больше количества раундов 
+					отправляем статус боя 0 статус раунда 0 номер раунда 0
+					если раунд == количеству раундов 
+					отправляем статус боя 1 статус раунда 1 номер раунда
+				 
+нажимаем кнопку СБ 1 СР 1 Р 2 Время 1:2:0	
+
+
+				проверяем время < вр раунда
+				 	если бой завершен и раунд == количеству раундов то раунд равен 0
+					
+					если нет 
+				 	старт продолжаем завершать бой
+				 
+				 проверяем время > вр раунда
+				 	переходим на следующий раунд
+					если раунд < кол раундов
+					отправляем статус боя 1 статус раунда 0 номер раунда
+					если раунд > больше количества раундов 
+					отправляем статус боя 0 статус раунда 0 номер раунда 0
+					если раунд == количеству раундов 
+					отправляем статус боя 1 статус раунда 1 номер раунда
+
+конец таймера 2 раунда
+				 СБ 0 СР 0 Р 0 Время 0				 
+
+
